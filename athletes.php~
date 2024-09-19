@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width"/>
+
+<title>Athletes Table</title> 
+</head>
+
+<body>
+
+
+<?php
+$country_id = $_GET['country_id'];
+$part_name = $_GET['part_name'];
+
+include "database_connection_info.php";
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+$sql = "SELECT name, COUNT(name) FROM cyclist,event WHERE cyclist.cyclist_id = event.cyclist_id AND iso_id LIKE '%$country_id%' AND name LIKE '%$part_name%' GROUP BY cyclist.cyclist_id";
+
+$result = mysqli_query($conn, $sql);
+
+echo "<table border=1px solid black>";
+echo '<th>Name</th>';
+echo '<th>Participation counts</th>';
+
+if (mysqli_num_rows($result) > 0){
+    while ($row = mysqli_fetch_array($result)){
+    echo '<tr>';
+    echo '<td>'.$row[0].'</td>';
+    echo '<td>'.$row[1].'</td>';
+    echo '</tr>';
+    }
+}
+echo "</table>";
+
+
+mysqli_close($conn);
+?>
+</body>
+</html>
+
